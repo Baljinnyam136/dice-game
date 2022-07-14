@@ -11,12 +11,6 @@ var roundScore = 0;
 // var diceNumber = Math.floor(Math.random() * 6) + 1;
 
 // Програм эхлэхэд бэлтгэе
-document.getElementById('score-0').textContent = 0;
-document.getElementById('score-1').textContent = 0;
-
-document.getElementById('current-0').textContent = 0;
-document.getElementById('current-1').textContent = 0;
-
 var diceDom = document.querySelector(".dice");
 diceDom.style.display = 'none';
 
@@ -37,21 +31,51 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         roundScore = roundScore + diceNumber;
         document.getElementById('current-' + activePlayer).textContent = roundScore;
     } else {
-        // Энэ тоглогчийн ээлжинлээ цуглуулсан оноог 0 болгоно.
-        roundScore = 0;
-        document.getElementById('current-' + activePlayer).textContent = 0;
-
-        // Тоглогчийн ээлжийг нөгөө тоглогчруу шилжүүлнэ.
-        // 1 буусан тул тоглогчийн ээлжийг энэ хэсэгт сольж өгнө.
-        // Хэрэв идэвхтэй тоглогч нь 0 байвал идэвхтэй тоглогчийг 1 болго.
-        // Үгүй бол идэвхтэй тоглогчийг 0 болго. 
-        activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
-        
-        // Улаан цэгийг шилжүүлэх (toggle: байвал хасна байхгүй бол нэмнэ.)
-        document.querySelector('.player-0-panel').classList.toggle('active');
-        document.querySelector('.player-1-panel').classList.toggle('active');
-
-        // Шоог түр алга болгоно.
-        diceDom.style.display = 'none';
+        switchToNextPlayer();
     }
 });
+
+// HOLD товчны эвент листенер
+document.querySelector('.btn-hold').addEventListener('click', function() {
+    // Уг тоглогчийн цуглуулсан ээлжийн оноог глобаль оноон дээр нь нэмж өгөн.
+    scores[activePlayer] = scores[activePlayer] + roundScore;
+
+    // Дэлгэц дээр оноог нь өөрчилнө
+    document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+
+    // Ээлжийн оноог нь 0 болгоно
+    roundScore = 0;
+    document.getElementById('current-' + activePlayer).textContent = 0;
+
+    // Уг тоглогч хожсон эсэхийг (оноо нь 100-с их эсэх) шалгах
+    if(scores[activePlayer] >= 100) {
+        // Ялагч гэсэн текстийг нэрнийх нь оронд гаргана
+        document.getElementById('name-' + activePlayer).textContent = 'WINNER!!!';
+        document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+        document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+    } else {
+        // Тоглогчийн ээлжийг солино.
+        switchToNextPlayer();
+    }
+});
+
+// Энэ фцнкц нь тоглох ээлжийг дараачийн тоглогч руу шилжүүлдэг.
+
+function switchToNextPlayer() {
+    // Энэ тоглогчийн ээлжиндээ цуглуулсан оноог 0 болгоно.
+    roundScore = 0;
+    document.getElementById('current-' + activePlayer).textContent = 0;
+
+    // Тоглогчийн ээлжийг нөгөө тоглогчруу шилжүүлнэ.
+    activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
+    
+    // Улаан цэгийг шилжүүлэх (toggle: байвал хасна байхгүй бол нэмнэ.)
+    document.querySelector('.player-0-panel').classList.toggle('active');
+    document.querySelector('.player-1-panel').classList.toggle('active');
+
+    // Шоог түр алга болгоно.
+    diceDom.style.display = 'none';
+}
+
+// Шинэ тоглоом эхлүүлэх товчний эвент листенер
+document.querySelector('.btn')
