@@ -12,7 +12,7 @@ var scores;
 var roundScore;
 
 // Шооны зургийг үзүүлэх элементийг DOM-оос хайж олоод энд хадгалъя
-var diceDom = document.querySelector(".dice");
+var diceDom = document.querySelector(".dice1");
 
 // Тоглоомыг шинээр эхлэхэд бэлтгэнэ.
 function initGame() {
